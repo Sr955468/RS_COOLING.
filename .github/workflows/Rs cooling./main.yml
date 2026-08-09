@@ -1,0 +1,36 @@
+name: Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code डाउनलोड करें
+        uses: actions/checkout@v4
+
+      - name: Java सेट करें
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Gradle सेट करें
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Gradle permission दें
+        run: chmod +x gradlew
+
+      - name: APK बनाएं
+        run: ./gradlew assembleDebug
+
+      - name: APK सेव करें
+        uses: actions/upload-artifact@v4
+        with:
+          name: RS-COOLING-APK
+          path: "**/build/outputs/apk/debug/*.apk"
